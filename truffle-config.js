@@ -23,9 +23,7 @@
 
   const privateKey = process.env.SECRET_KEY;
   const infura = process.env.INFURA_KEY;
-
-  console.log(privateKey);
-  console.log(infura);
+  const TEST_ETHERSCAN = process.env.TEST_ETHERSCAN;
 
 module.exports = {
   /**
@@ -86,16 +84,23 @@ module.exports = {
   compilers: {
     solc: {
       version: "0.5.16",      // Fetch exact version from solc-bin (default: truffle's version)
-      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
+      docker: false,        // Use "0.5.1" you've installed locally with docker (default: false)
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+       optimizer: {
+        enabled: true,
+        runs: 9999999
+       },
+       evmVersion: "istanbul"
+      }
     }
   },
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+  api_keys: {
+    etherscan: TEST_ETHERSCAN
+  },
+
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
   // false to enabled: true. The default storage location can also be
