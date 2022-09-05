@@ -45,6 +45,8 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^2.0.14"
+    "@truffle/hdwallet-provider": "^2.0.14",
+    "@ethersproject/solidity": "^5.7.0",
+    "dotenv": "^16.0.2"
   }
 }

@@ -109,7 +109,7 @@ describe('SevnFactory', () => {
     await factory.switchIndividualFee(pair.address, true);
     expect(await pair.isIndividualFee()).to.eq(true)
     
-    await expect(factory.connect(other).setIndividualSwapFee(pair.address, bigNumberify('2'))).to.be.revertedWith('Sevn: FORBIDDEN')
+    await expect(factory.connect(other).setIndividualSwapFee(pair.address, bigNumberify('3'))).to.be.revertedWith('Sevn: FORBIDDEN')
     await expect(factory.setIndividualSwapFee(pair.address, bigNumberify('21'))).to.be.revertedWith('Sevn: PAIR < 0% or > 0.5%');
     await factory.setIndividualSwapFee(pair.address, bigNumberify('5'));
     expect(await pair.getSwapFee()).to.eq(bigNumberify('5'))
@@ -121,8 +121,8 @@ describe('SevnFactory', () => {
     expect(await pair.getDevFee()).to.eq(bigNumberify('20'))
 
     await factory.switchIndividualFee(pair.address, false);
-    expect(await pair.getSwapFee()).to.eq(bigNumberify('2'))
-    expect(await pair.getDevFee()).to.eq(bigNumberify('3'))
+    expect(await pair.getSwapFee()).to.eq(bigNumberify('3'))
+    expect(await pair.getDevFee()).to.eq(bigNumberify('10'))
 
   })
 })

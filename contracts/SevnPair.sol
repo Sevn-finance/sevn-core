@@ -30,8 +30,8 @@ contract SevnPair is ISevnPair, SevnERC20 {
     uint public kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
 
     bool public isIndividualFee = false; // custom fee for pair
-    uint256 private individualSwapFee = 2; // uses 0.2% default
-    uint256 private individualDevFee = 3; // uses 0.03% default from swapFee
+    uint256 private individualSwapFee = 3; // uses 0.3% default
+    uint256 private individualDevFee = 10; // uses 0.1% default from swapFee
 
     uint private unlocked = 1;
     modifier lock() {

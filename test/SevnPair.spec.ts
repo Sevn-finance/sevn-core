@@ -12,14 +12,14 @@ const MINIMUM_LIQUIDITY = bigNumberify(10).pow(3)
 chai.use(solidity)
 
 function getAmountOut(amountIn: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber)  {
-  let amountInWithFee = amountIn.mul(998);
+  let amountInWithFee = amountIn.mul(997);
   let numerator = amountInWithFee.mul(reserveOut);
   let denominator = reserveIn.mul(1000).add(amountInWithFee);
   return numerator.div(denominator);
 }
 function getAmountIn(amountOut: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber)  {
   let numerator = reserveIn.mul(amountOut).mul(1000);
-  let denominator = reserveOut.sub(amountOut).mul(998);
+  let denominator = reserveOut.sub(amountOut).mul(997);
   return numerator.div(denominator).add(1);
 }
 
@@ -80,19 +80,21 @@ describe('SevnPair', () => {
     await pair.mint(wallet.address, overrides)
   }
   const swapTestCases: BigNumber[][] = [
-    [1, 5, 10, '1663887962654218072'],
-    [1, 10, 5, '453718857974177123'],
+    [1, 5, 10, '1662497915624478906'],
+    [1, 10, 5, '453305446940074565'],
 
-    [2, 5, 10, '2853058890794739851'],
-    [2, 10, 5, '831943981327109036'],
+    [2, 5, 10, '2851015155847869602'],
+    [2, 10, 5, '831248957812239453'],
 
-    [1, 10, 10, '907437715948354246'],
-    [1, 100, 100, '988138378977801540'],
-    [1, 1000, 1000, '997004989020957084']
+    [1, 10, 10, '906610893880149131'],
+    [1, 100, 100, '987158034397061298'],
+    [1, 1000, 1000, '996006981039903216']
   ].map(a => a.map(n => (typeof n === 'string' ? bigNumberify(n) : expandTo18Decimals(n))))
   swapTestCases.forEach((swapTestCase, i) => {
     it(`getInputPrice:${i}`, async () => {
       const [swapAmount, token0Amount, token1Amount, expectedOutputAmount] = swapTestCase
+
+      //console.log(getAmountOut(swapAmount, token0Amount, token1Amount ).toString());
 
       await addLiquidity(token0Amount, token1Amount)
       await token0.transfer(pair.address, swapAmount)
@@ -104,14 +106,17 @@ describe('SevnPair', () => {
   })
 
   const optimisticTestCases: BigNumber[][] = [
-    ['998000000000000000', 5, 10, 1], // given amountIn, amountOut = floor(amountIn * .998)
-    ['998000000000000000', 10, 5, 1],
-    ['998000000000000000', 5, 5, 1],
-    [1, 5, 5, '1002004008016032065'] // given amountOut, amountIn = ceiling(amountOut / .998)
+    ['997000000000000000', 5, 10, 1], // given amountIn, amountOut = floor(amountIn * .997)
+    ['997000000000000000', 10, 5, 1],
+    ['997000000000000000', 5, 5, 1],
+    [1, 5, 5, '1003009027081243732' ] // given amountOut, amountIn = ceiling(amountOut / .997)
   ].map(a => a.map(n => (typeof n === 'string' ? bigNumberify(n) : expandTo18Decimals(n))))
   optimisticTestCases.forEach((optimisticTestCase, i) => {
     it(`optimistic:${i}`, async () => {
       const [outputAmount, token0Amount, token1Amount, inputAmount] = optimisticTestCase
+
+      console.log('amount: ', outputAmount.div(9970).toString());
+
 
       await addLiquidity(token0Amount, token1Amount)
       await token0.transfer(pair.address, inputAmount)
@@ -224,7 +229,7 @@ describe('SevnPair', () => {
   })
 
   it('price{0,1}CumulativeLast', async () => {
-    const token0Amount = expandTo18Decimals(3)
+   const token0Amount = expandTo18Decimals(3)
     const token1Amount = expandTo18Decimals(3)
     await addLiquidity(token0Amount, token1Amount)
 
@@ -287,13 +292,13 @@ describe('SevnPair', () => {
     const expectedLiquidity = expandTo18Decimals(1000)
     await pair.transfer(pair.address, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
     await pair.burn(wallet.address, overrides)
-    expect(await pair.totalSupply()).to.eq(MINIMUM_LIQUIDITY.add('374625795658571'))
-    expect(await pair.balanceOf(other.address)).to.eq('374625795658571')
+    expect(await pair.totalSupply()).to.eq(MINIMUM_LIQUIDITY.add('136227529581260'))
+    expect(await pair.balanceOf(other.address)).to.eq('136227529581260')
 
     // using 1000 here instead of the symbolic MINIMUM_LIQUIDITY because the amounts only happen to be equal...
     // ...because the initial liquidity amounts were equal
-    expect(await token0.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('374252525546167'))
-    expect(await token1.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('375000280969452'))
+    expect(await token0.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('136091827471333'))
+    expect(await token1.balanceOf(pair.address)).to.eq(bigNumberify(1000).add('136363738534348'))
   })
 })
   

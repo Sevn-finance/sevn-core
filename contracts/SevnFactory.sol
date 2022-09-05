@@ -10,8 +10,8 @@ contract SevnFactory is ISevnFactory {
     address public feeTo;
     address public feeToSetter;
 
-    uint256 public swapFee = 2; // uses 0.2% default
-    uint256 public devFee = 3; // uses 0.03% default from swapFee
+    uint256 public swapFee = 3; // uses 0.3% default
+    uint256 public devFee = 10; // uses 0.1% default from swapFee
 
     mapping(address => mapping(address => address)) public getPair;
     address[] public allPairs;
