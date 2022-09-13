@@ -9,6 +9,7 @@ contract SevnFactory is ISevnFactory {
     
     address public feeTo;
     address public feeToSetter;
+    bytes32 public INIT_CODE_HASH = keccak256(abi.encodePacked(type(SevnPair).creationCode));
 
     uint256 public swapFee = 3; // uses 0.3% default
     uint256 public devFee = 10; // uses 0.1% default from swapFee
